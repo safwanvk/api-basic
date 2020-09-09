@@ -44,7 +44,7 @@ def get():
     return jsonify({'msg': 'Hello World'})
 
 
-@app.route('/product', methods=['GET', 'POST'])
+@app.route('/product', methods=['POST'])
 def add_product():
     name = request.json['name']
     description = request.json['description']
@@ -56,6 +56,13 @@ def add_product():
     db.session.commit()
 
     return product_schema.jsonify(new_product)
+
+
+@app.route('/product', methods=['GET'])
+def get_products():
+    all_products = Product.query.all()
+    result = products_schema.dump(all_products)
+    return jsonify(result)
 
 
 if __name__ == '__main__':
