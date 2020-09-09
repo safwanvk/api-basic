@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
@@ -42,6 +42,20 @@ db.create_all()
 @app.route('/', methods=['GET'])
 def get():
     return jsonify({'msg': 'Hello World'})
+
+
+@app.route('/product', methods=['GET', 'POST'])
+def add_product():
+    name = request.json['name']
+    description = request.json['description']
+    price = request.json['price']
+    qty = request.json['qty']
+
+    new_product = Product(name=name, description=description, price=price, qty=qty)
+    db.session.add(new_product)
+    db.session.commit()
+
+    return product_schema.jsonify(new_product)
 
 
 if __name__ == '__main__':
